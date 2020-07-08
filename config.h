@@ -6,17 +6,16 @@ static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = {
-	"Droid Sans:pixelsize=13",
-	"Font Awesome 5 Brands Regular:pixelsize=13"
-	"Font Awesome 5 Free Solid:pixelsize=13"
-	"Font Awesome 5 Free Regular:pixelsize=13"
+	"Droid Sans:pixelsize=12",
+	"Font Awesome 5 Brands Regular:pixelsize=12"
+	"Font Awesome 5 Free Solid:pixelsize=12"
+	"Font Awesome 5 Free Regular:pixelsize=12"
 };
 static const char dmenufont[]       = "Linux Libertine:style=Regular:size=11";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-//static const char col_cyan[]        = "#005577";
 static const char col_cyan[]        = "#1d5762";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -35,6 +34,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "XaoS",     "xaos",     NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -68,6 +68,9 @@ static const char *incr_vol[] = { "pamixer", "-i", "1", NULL };
 static const char *decr_vol[] = { "pamixer", "-d", "1", NULL };
 static const char *mpc_toggle[] = { "mpc", "toggle", NULL };
 static const char *ranger[] = { "st", "ranger", NULL };
+static const char *change_wall[] = { "change_wall", NULL };
+static const char *change_wall_sub[] = { "change_wall", "toggle", NULL };
+static const char *prtscrcmd[]  = { "screenshot",  NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -77,12 +80,15 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_g,      spawn,          {.v = change_wall} },
+	{ MODKEY|ShiftMask,             XK_g,      spawn,          {.v = change_wall_sub} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
+	{ 0,                            XK_Print,  spawn,          {.v = prtscrcmd } },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
