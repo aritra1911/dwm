@@ -14,6 +14,7 @@ static const int vertpad            = 10;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
 static const char *fonts[]          = {
 	"Droid Sans:pixelsize=12",
+	"Material Design Icons Desktop:pixelsize=11:antialias=true:autohint=true",
 	"Font Awesome 5 Brands Regular:pixelsize=12"
 };
 static const char dmenufont[]       = "Linux Libertine:style=Regular:size=11";
@@ -36,7 +37,7 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "龜", "", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
+static const char *tags[] = { "󰈹", "󰆍", "III", "IV", "󰗚", "VI", "VII", "VIII", "IX" };
 
 static const Rule rules[] = {
 	/* xprop(1):
