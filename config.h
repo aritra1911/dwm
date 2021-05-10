@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -13,17 +14,20 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 static const int vertpad            = 0;        /* vertical padding of bar */
 static const int sidepad            = 0;        /* horizontal padding of bar */
 static const char *fonts[]          = {
-	"Roboto Mono:style=Regular:antialias=true:pixelsize=12",
+	"Termingus:style=Regular:pixelsize=16:autohint=true",
 	"Material Design Icons Desktop:pixelsize=12:antialias=true:autohint=true",
-	"Font Awesome 5 Brands Regular:pixelsize=12",
+	"Font Awesome 5 Brands Regular:pixelsize=12:antialias=true:autohint=true",
+	"Font Awesome 5 Free Solid:style=solid:pixelsize=11:antialias=true:autohint=true",
+	"Font Awesome 5 Free Regular:style=regular:pixelsize=11:antialias=true:autohint=true",
 };
-static const char dmenufont[]       = "Roboto Mono:style=Regular:size=11";
+static const char dmenufont[]       = "Termingus:style=Regular:pixelsize=16";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#1d5762";
-static const unsigned int baralpha = 0xd0;
+static const char col_cyan[]        = "#008080";
+//static const unsigned int baralpha = 0xd0;
+static const unsigned int baralpha = OPAQUE;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -37,7 +41,7 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "󰈹", "󰆍", "III", "IV", "󰗚", "VI", "VII", "VIII", "󰎈" };
+static const char *tags[] = { "", "", "iii", "iv", "󰗚", "vi", "vii", "viii", "󰎈" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -45,8 +49,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "firefox",  NULL,       NULL,       1,            0,           -1 },
 	{ "XaoS",     "xaos",     NULL,       0,            1,           -1 },
 };
 
@@ -76,9 +79,11 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *toggle_mute[] = { "pamixer", "-t", NULL };
-static const char *incr_vol[] = { "pamixer", "-i", "1", NULL };
-static const char *decr_vol[] = { "pamixer", "-d", "1", NULL };
+static const char *monbrightnessup[] = { "backlight_control", "+10", NULL };
+static const char *monbrightnessdown[] = { "backlight_control", "-10", NULL };
+static const char *mute[] = { "pamixer", "-t", NULL };
+static const char *raisevol[] = { "pamixer", "-i", "1", NULL };
+static const char *lowervol[] = { "pamixer", "-d", "1", NULL };
 static const char *mpc_toggle[] = { "mpc", "toggle", NULL };
 static const char *rangercmd[] = { "st", "ranger", NULL };
 static const char *change_wall[] = { "change_wall", NULL };
@@ -87,18 +92,21 @@ static const char *prtscrcmd[]  = { "screenshot",  NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_minus,  spawn,          {.v = decr_vol } },
-	{ MODKEY,                       XK_equal,  spawn,          {.v = incr_vol } },
+	{ 0,               XF86XK_MonBrightnessUp, spawn,          {.v = monbrightnessup } },
+	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = monbrightnessdown } },
+	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = lowervol } },
+	{ 0,                     XF86XK_AudioMute, spawn,          {.v = mute } },
+	{ 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = raisevol } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = mpc_toggle } },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_g,      spawn,          {.v = change_wall} },
 	{ MODKEY|ShiftMask,             XK_g,      spawn,          {.v = change_wall_sub} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.01} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.01} },
 	{ MODKEY|Mod1Mask,              XK_h,      incrgaps,       {.i = +1 } },
@@ -118,14 +126,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_y,      incrovgaps,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_o,      incrovgaps,     {.i = -1 } },
 	{ 0,                            XK_Print,  spawn,          {.v = prtscrcmd } },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_r,      spawn,          {.v = rangercmd } },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = toggle_mute } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
