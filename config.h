@@ -51,6 +51,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "firefox",  NULL,       NULL,       1,            0,           -1 },
 	{ "XaoS",     "xaos",     NULL,       0,            1,           -1 },
+	{ "mpv",      NULL,       NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -79,6 +80,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *display_switch[] = { "display_switch.sh", NULL };
 static const char *monbrightnessup[] = { "backlight_control", "+10", NULL };
 static const char *monbrightnessdown[] = { "backlight_control", "-10", NULL };
 static const char *mute[] = { "pamixer", "-t", NULL };
@@ -92,6 +94,7 @@ static const char *prtscrcmd[]  = { "screenshot",  NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+        { 0,                       XF86XK_Display, spawn,          {.v = display_switch } },
 	{ 0,               XF86XK_MonBrightnessUp, spawn,          {.v = monbrightnessup } },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = monbrightnessdown } },
 	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = lowervol } },
