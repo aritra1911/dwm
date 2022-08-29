@@ -41,7 +41,7 @@ static const unsigned int alphas[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "iii", "iv", "󰗚", "vi", "vii", "viii", "󰎈" };
+static const char *tags[] = { "󰈹", "󰆍", "iii", "iv", "󰗚", "vi", "vii", "viii", "󰎈" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -58,6 +58,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -77,9 +78,11 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont,
+                                  "-nb", col_gray1,
+                                  "-nf", col_gray3, "-sb", col_cyan,
+                                  "-sf", col_gray4, NULL };
+static const char *termcmd[] = { "st", NULL };
 static const char *display_switch[] = { "display_switch.sh", NULL };
 static const char *monbrightnessup[] = { "backlight_control", "+10", NULL };
 static const char *monbrightnessdown[] = { "backlight_control", "-10", NULL };
@@ -90,16 +93,18 @@ static const char *mpc_toggle[] = { "mpc", "toggle", NULL };
 static const char *rangercmd[] = { "st", "ranger", NULL };
 static const char *change_wall[] = { "change_wall", NULL };
 static const char *change_wall_sub[] = { "change_wall", "toggle", NULL };
-static const char *prtscrcmd[]  = { "screenshot",  NULL };
+static const char *prtscrcmd[] = { "screenshot", NULL };
+static const char *zoomer[] = { "/home/aritra/pgm/notmine/boomer/boomer", NULL };
 
-static Key keys[] = {
+static const Key keys[] = {
 	/* modifier                     key        function        argument */
-        { 0,                       XF86XK_Display, spawn,          {.v = display_switch } },
+	{ 0,                       XF86XK_Display, spawn,          {.v = display_switch } },
 	{ 0,               XF86XK_MonBrightnessUp, spawn,          {.v = monbrightnessup } },
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = monbrightnessdown } },
 	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = lowervol } },
 	{ 0,                     XF86XK_AudioMute, spawn,          {.v = mute } },
 	{ 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = raisevol } },
+	{ MODKEY,                    XK_quoteleft, spawn,          {.v = zoomer } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = mpc_toggle } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
@@ -158,7 +163,7 @@ static Key keys[] = {
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
-static Button buttons[] = {
+static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
