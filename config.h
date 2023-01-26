@@ -26,13 +26,14 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#008080";
+static const char col_red[]         = "#c20000";
 //static const unsigned int baralpha = 0xd0;
 static const unsigned int baralpha = OPAQUE;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeSel]  = { col_gray4, col_red,  col_red  },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
@@ -80,16 +81,18 @@ static const Layout layouts[] = {
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont,
                                   "-nb", col_gray1,
-                                  "-nf", col_gray3, "-sb", col_cyan,
+                                  "-nf", col_gray3, "-sb", col_red,
                                   "-sf", col_gray4, NULL };
 static const char *termcmd[] = { "st", NULL };
 static const char *display_switch[] = { "display_switch.sh", NULL };
 static const char *monbrightnessup[] = { "backlight_control", "+10", NULL };
 static const char *monbrightnessdown[] = { "backlight_control", "-10", NULL };
 static const char *mute[] = { "pamixer", "-t", NULL };
+static const char *micmute[] = { "pactl", "--", "set-source-mute", "0", "toggle", NULL };
 static const char *raisevol[] = { "pamixer", "-i", "1", NULL };
 static const char *lowervol[] = { "pamixer", "-d", "1", NULL };
 static const char *mpc_toggle[] = { "mpc", "toggle", NULL };
+static const char *rfkill[] = { "rfkill", "block", "all", NULL };
 static const char *rangercmd[] = { "st", "ranger", NULL };
 static const char *change_wall[] = { "change_wall", NULL };
 static const char *change_wall_sub[] = { "change_wall", "toggle", NULL };
@@ -103,7 +106,9 @@ static const Key keys[] = {
 	{ 0,             XF86XK_MonBrightnessDown, spawn,          {.v = monbrightnessdown } },
 	{ 0,              XF86XK_AudioLowerVolume, spawn,          {.v = lowervol } },
 	{ 0,                     XF86XK_AudioMute, spawn,          {.v = mute } },
+	{ 0,                  XF86XK_AudioMicMute, spawn,          {.v = micmute } },
 	{ 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = raisevol } },
+	{ 0,                        XF86XK_RFKill, spawn,          {.v = rfkill } },
 	{ MODKEY,                    XK_quoteleft, spawn,          {.v = zoomer } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = mpc_toggle } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
